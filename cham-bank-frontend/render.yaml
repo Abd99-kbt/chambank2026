@@ -1,0 +1,44 @@
+services:
+  # Frontend Service (Next.js)
+  - type: web
+    name: cham-bank-frontend
+    runtime: node
+    buildCommand: npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_BASE_URL
+        fromService:
+          type: web
+          name: cham-bank-api
+          property: host
+      - key: NEXT_PUBLIC_STRAPI_URL
+        fromService:
+          type: web
+          name: cham-bank-api
+          property: host
+      - key: APP_NAME
+        value: Cham Bank
+      - key: APP_URL
+        fromService:
+          type: web
+          name: cham-bank-frontend
+          property: host
+
+  # API Service (Express)
+  - type: web
+    name: cham-bank-api
+    runtime: node
+    buildCommand: echo "No build step required"
+    startCommand: node mock-api-server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: ALLOWED_ORIGINS
+        fromService:
+          type: web
+          name: cham-bank-frontend
+          property: host
