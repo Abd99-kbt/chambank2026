@@ -7,6 +7,7 @@ import { strapiAPI } from '@/lib/strapi';
 import { useLanguage } from '@/context/LanguageContext';
 import Image from 'next/image';
 import Link from 'next/link';
+import type { StrapiEntity, SliderAttributes } from '@/lib/types';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -14,22 +15,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-fade';
 
-interface Slide {
-    id: number;
-    attributes: {
-        title: string;
-        description: string;
-        link?: string;
-        buttonText?: string;
-        image: {
-            data: {
-                attributes: {
-                    url: string;
-                }
-            }
-        }
-    }
-}
+type Slide = StrapiEntity<SliderAttributes>;
 
 export default function HeroSlider() {
     const { t, language } = useLanguage();
@@ -61,7 +47,9 @@ export default function HeroSlider() {
                             description: t.hero_1_desc,
                             link: '/services',
                             buttonText: t.hero_btn_services,
-                            image: { data: { attributes: { url: '/images/awdea.jpg' } } }
+                            image: { data: { attributes: { url: '/images/awdea.jpg' } } },
+                            isActive: true,
+                            order: 1
                         }
                     },
                     {
@@ -71,7 +59,9 @@ export default function HeroSlider() {
                             description: t.hero_2_desc,
                             link: '/products/real-estate',
                             buttonText: t.hero_btn_more,
-                            image: { data: { attributes: { url: '/images/najmaty.jpg' } } }
+                            image: { data: { attributes: { url: '/images/najmaty.jpg' } } },
+                            isActive: true,
+                            order: 2
                         }
                     },
                     {
@@ -81,7 +71,9 @@ export default function HeroSlider() {
                             description: t.hero_3_desc,
                             link: '/services',
                             buttonText: t.hero_btn_discover,
-                            image: { data: { attributes: { url: '/images/mutanakel.jpg' } } }
+                            image: { data: { attributes: { url: '/images/mutanakel.jpg' } } },
+                            isActive: true,
+                            order: 3
                         }
                     },
                     {
@@ -91,7 +83,9 @@ export default function HeroSlider() {
                             description: t.hero_4_desc,
                             link: '/calculator',
                             buttonText: t.hero_btn_calc,
-                            image: { data: { attributes: { url: '/images/mutanakel-280-29.jpg' } } }
+                            image: { data: { attributes: { url: '/images/mutanakel-280-29.jpg' } } },
+                            isActive: true,
+                            order: 4
                         }
                     },
                     {
@@ -101,7 +95,9 @@ export default function HeroSlider() {
                             description: t.hero_5_desc,
                             link: '/about',
                             buttonText: t.hero_btn_about,
-                            image: { data: { attributes: { url: '/images/najmaty1.jpg' } } }
+                            image: { data: { attributes: { url: '/images/najmaty1.jpg' } } },
+                            isActive: true,
+                            order: 5
                         }
                     },
                     {
@@ -111,10 +107,12 @@ export default function HeroSlider() {
                             description: t.hero_6_desc,
                             link: '/branches',
                             buttonText: t.hero_btn_visit,
-                            image: { data: { attributes: { url: '/images/najmaty2.jpg' } } }
+                            image: { data: { attributes: { url: '/images/najmaty2.jpg' } } },
+                            isActive: true,
+                            order: 6
                         }
                     }
-                ]);
+                ] as Slide[]);
             } finally {
                 setLoading(false);
             }
@@ -146,7 +144,7 @@ export default function HeroSlider() {
             >
                 {slides.map((slide) => {
                     // Handle image URL (Strapi returns relative path usually, need to prepend URL if local)
-                    let imgUrl = slide.attributes.image.data.attributes.url;
+                    let imgUrl = slide.attributes.image.data?.attributes.url || '/images/default.jpg';
                     if (!imgUrl.startsWith('http') && !imgUrl.startsWith('/')) {
                         imgUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${imgUrl}`;
                     }
