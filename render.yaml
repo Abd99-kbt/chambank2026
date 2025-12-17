@@ -3,6 +3,7 @@ services:
   - type: web
     name: cham-bank-frontend
     runtime: node
+    rootDir: cham-bank-frontend
     buildCommand: npm run build
     startCommand: npm run start
     envVars:
@@ -30,6 +31,7 @@ services:
   - type: web
     name: cham-bank-api
     runtime: node
+    rootDir: cham-bank-frontend
     buildCommand: echo "No build step required"
     startCommand: node mock-api-server.js
     envVars:
